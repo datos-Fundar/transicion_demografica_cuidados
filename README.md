@@ -1,4 +1,4 @@
-# La pirámide pierde su forma, ¿estamos preparados?
+# La pirámide pierde su forma, ¿Estamos preparados?
 
 <!-- CAMBIAR "https://place-hold.it/1920x1080" POR EL LINK A LA IMAGEN CORRESPONDIENTE -->
 [![La pirámide pierde su forma, ¿estamos preparados?](https://place-hold.it/1920x1080)](https://fund.ar)
@@ -8,7 +8,22 @@
 
 Describir aca lo que hay en el repositorio y citar al docu principal cuando esté
 
-#### Ejemplos de alertas destacadas
+#### Cita sugerida
+
+```r
+Puglia, M., Bendersky, A., de la Fuente, X., Santellán, C., Nadur, Y. (2025). La pirámide pierde su forma, ¿Estamos preparados? Una herramienta para mejorar la planificación en la provisión de cuidados en la última milla de la transición demográfica. Fundar.
+
+Bibtex:
+
+@report{XXXXXXXXXXXXXXX, 
+  author = {Puglia, M., Bendersky, A., de la Fuente, X., Santellán, C., Nadur, Y.}, 
+  title = {La pirámide pierde su forma, ¿Estamos preparados?}, 
+  year = {2025}, 
+  institution = {Fundar}, 
+  type = {Document} 
+}
+               
+```
 
 > [!NOTE]
 > Información importante o útil.
