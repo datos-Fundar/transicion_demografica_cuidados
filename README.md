@@ -8,7 +8,7 @@
 
 Describir aca lo que hay en el repositorio y citar al docu principal cuando esté
 
-## Ejemplos de alertas destacadas
+#### Ejemplos de alertas destacadas
 
 > [!NOTE]
 > Información importante o útil.
