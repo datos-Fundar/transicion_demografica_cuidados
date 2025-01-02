@@ -8,7 +8,7 @@
 
 Describir aca lo que hay en el repositorio y citar al docu principal cuando esté
 
-#### Cita sugerida
+#### Cita sugerida:
 
 ```r
 Puglia, M., Bendersky, A., de la Fuente, X., Santellán, C., Nadur, Y. (2025). La pirámide pierde su forma, ¿Estamos preparados? Una herramienta para mejorar la planificación en la provisión de cuidados en la última milla de la transición demográfica. Fundar.
