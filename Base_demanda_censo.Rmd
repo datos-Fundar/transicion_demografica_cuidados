@@ -1,9 +1,7 @@
 <<<<<<< HEAD:Bases demanda/Base Intensidad Demanda Cuidados Nacional.Rmd
 ---
 title: "Base Intensidad Demanda Nacional | Cuidados"
-author: "Celina Santellán"
-date: "`r Sys.Date()`"
-output: html_document
+author: "Géneros Fundar"
 ---
 
 ## Base demanda
@@ -22,7 +20,7 @@ library(RColorBrewer)
 options(scipen = 999)
 ```
 
-Uso las bases de Estructura por sexo y edad de la población por provincia del Censo 2022 de INDEC - Cuadro 4.15. Provincia del Neuquén. Total de población, por sexo registrado al nacer e índice de feminidad, según edad y departamento. Año 2022 [https://www.indec.gob.ar/indec/web/Nivel4-Tema-2-41-165] 
+Usamos las bases de Estructura por sexo y edad de la población por provincia del Censo 2022 de INDEC - Cuadro 4.15. Provincia del Neuquén. Total de población, por sexo registrado al nacer e índice de feminidad, según edad y departamento. Año 2022 [https://www.indec.gob.ar/indec/web/Nivel4-Tema-2-41-165] 
 
 ```{r limpieza base}
 base_proyecciones <- read_excel("./base_proyecciones.xlsx") %>% 
@@ -166,7 +164,7 @@ base0 <-  base %>%
   mutate(pob_total_depto40 = sum(cantidad40),
          prop_grupo_depto40 = total_grupo_depto40/pob_total_depto40)
 
-#me faltan los totales de mujeres y varones
+#faltan los totales de mujeres y varones
 na_count <- sapply(base0, function(x) sum(is.na(x)))
 print(na_count)
 write.xlsx(base0, "base_completa.xlsx")
@@ -232,46 +230,19 @@ summary(demanda_depto$pob_total_depto)
 tipologias <- demanda_depto %>% 
   mutate(diferencia_Infancias = prop_grupo_depto40_Infancias - prop_grupo_depto22_Infancias,
          diferencia_PAM = prop_grupo_depto40_PAM - prop_grupo_depto22_PAM,
-         tipo_dif_PI = case_when(diferencia_Infancias < -0.02 ~ "A",
-                                 diferencia_Infancias >= -0.02 & diferencia_Infancias < -0.01 ~ "I",
-                                 diferencia_Infancias < 0 & diferencia_Infancias >= -0.01 ~ "B",
+         tipo_dif_PI = case_when(diferencia_Infancias <= -1.5 ~ "A",
+                                 diferencia_Infancias > -1.5 & diferencia_Infancias <= -1 ~ "I",
+                                 diferencia_Infancias < 0 & diferencia_Infancias > -1 ~ "B",
                                  diferencia_Infancias == 0 ~ "C"),
          tipo_dif_PM = case_when(diferencia_PAM > 0.06 ~ "A",
                                  diferencia_PAM <= 0.06 & diferencia_PAM > 0.04 ~ "I",
                                  diferencia_PAM <= 0.04 & diferencia_PAM >= 0.02 ~ "B",
                                  diferencia_PAM == 0 ~ "C"),
          combinacion_dif = paste0(tipo_dif_PI, tipo_dif_PM),
-         cambio = case_when(prop_grupo_depto22_Infancias < 0.062 & prop_grupo_depto22_PAM < 0.1624 & prop_grupo_depto40_PAM > 0.2064 ~ "ni_PI",
-                            prop_grupo_depto22_Infancias > 0.062 & prop_grupo_depto40_PAM > 0.2064 ~ "PI_PM",
-                            prop_grupo_depto22_PAM > 0.1624 & prop_grupo_depto40_Infancias > 0.0516 ~ "PM_PI",
-                            prop_grupo_depto22_Infancias > 0.062 & prop_grupo_depto40_Infancias > 0.0516 ~ "PI_PI",
-                            prop_grupo_depto22_PAM > 0.1624 & prop_grupo_depto40_PAM > 0.2064 ~ "PM_PM",
-                            TRUE ~ "nini"))
+       
 
 write.xlsx(tipologias, "tipologias.xlsx")
 
-resumen_cambio <- tipologias %>% 
-  group_by(name_prov, cambio) %>% 
-  summarise(total = n()) %>% 
-  pivot_wider(names_from = cambio, values_from = total) %>% 
-  mutate(total = PI_PI + PI_)
-
-resumen_combinacion_dif <- tipologias %>% 
-  group_by(name_prov, cambio) %>% 
-  summarise(total = n()) %>% 
-  pivot_wider(names_from = cambio, values_from = total) %>% 
-  mutate(total = PI_PI + PI_)
-
-# Alto PI: < -0.02
-# Intermedio PI: < -0.01 & > -0.02
-# Bajo PI: > -0.01
-# Cero PI: = 0
-
-# Alto PI: > 0.06
-# Intermedio PI: < 0.06 & > 0.04
-# Bajo PI: < 0.04 & > 0.02
-# Cero PM: = 0
-```
 
 
 ```{r base subgrupos}
