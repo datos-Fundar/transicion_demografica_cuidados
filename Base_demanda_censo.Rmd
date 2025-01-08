@@ -1,0 +1,936 @@
+<<<<<<< HEAD:Bases demanda/Base Intensidad Demanda Cuidados Nacional.Rmd
+---
+title: "Base Intensidad Demanda Nacional | Cuidados"
+author: "Celina Santellán"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+## Base demanda
+
+Código para armar la base de intensidad de demanda de cuidados en Argentina, en función de bases de datos del Censo 2022, proyecciones poblacionales del Censo 2010 y la Escala de Argentina determinada por la Cepal (2021)
+
+```{r librerias}
+library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(readxl)
+library(openxlsx)
+library(geoAr)
+library(RColorBrewer)
+
+options(scipen = 999)
+```
+
+Uso las bases de Estructura por sexo y edad de la población por provincia del Censo 2022 de INDEC - Cuadro 4.15. Provincia del Neuquén. Total de población, por sexo registrado al nacer e índice de feminidad, según edad y departamento. Año 2022 [https://www.indec.gob.ar/indec/web/Nivel4-Tema-2-41-165] 
+
+```{r limpieza base}
+base_proyecciones <- read_excel("./base_proyecciones.xlsx") %>% 
+  select(c(2,3,10,11,12))
+
+base_compilada <- read_excel("./base_compilada_v1.xlsx")
+
+base_compilada <- base_compilada %>%
+  filter(!Hoja == "Índice") %>% 
+  filter(!edad == "0-4", !edad == "5-9", !edad == "10-14",
+         !edad == "15-19", !edad == "20-24", !edad == "25-29", 
+         !edad == "30-34", !edad == "35-39", !edad == "40-44", 
+         !edad == "45-49", !edad == "50-54", !edad == "55-59", 
+         !edad == "60-64", !edad == "65-69", !edad == "70-74", 
+         !edad == "75-79", !edad == "80-84", !edad == "85-89", 
+         !edad == "90-94", !edad == "95-99", !edad == "Total") %>%
+  mutate(codprov0 = substr(Archivo, 49, 49),
+         codprov1 = substr(Archivo, 50, 50),
+         codprov_comp = ifelse(codprov1 >= 0 & codprov1 <= 9,
+                          paste0(codprov0, codprov1),
+                          paste0(0, codprov0)),
+         coddepto0 = ifelse(codprov_comp <=9,
+                            substr(Hoja, 12, 15),
+                            substr(Hoja, 14, 16)),
+         coddepto0 = gsub(".", 
+                          "",
+                          coddepto0, 
+                          fixed = TRUE),
+         coddepto_comp = case_when(nchar(coddepto0) == 3 ~ coddepto0,
+                              nchar(coddepto0) == 2 ~ paste0("0", coddepto0),
+                              nchar(coddepto0) == 1 ~ paste0("00", coddepto0)),
+         edad = case_when(edad == "100 y más" ~ "100",
+                          TRUE ~ edad)) %>% 
+  select(c(3, 4, 5, 6, 9, 11)) %>% 
+  mutate(cantidad22 = ifelse(is.na(cantidad22), 0, cantidad22))
+
+base_cod_censo <- read_excel("./codigos_argentina_2023_comp.xlsx") %>%
+  mutate(codprov_comp = as.character(codprov_comp),
+         coddepto_comp = as.character(coddepto_comp),
+         codprov_comp = case_when(nchar(codprov_comp) == 2 ~ codprov_comp,
+                             nchar(codprov_comp) == 1 ~ paste0("0", codprov_comp)),
+         coddepto_comp = case_when(nchar(coddepto_comp) == 3 ~ coddepto_comp,
+                              nchar(coddepto_comp) == 2 ~ paste0("0", coddepto_comp),
+                              nchar(coddepto_comp) == 1 ~ paste0("00", coddepto_comp)),
+         codprov_censo = as.character(codprov_censo),
+         coddepto_censo = as.character(coddepto_censo),
+         codprov_censo = case_when(nchar(codprov_censo) == 2 ~ codprov_censo,
+                             nchar(codprov_censo) == 1 ~ paste0("0", codprov_censo)),
+         coddepto_censo = case_when(nchar(coddepto_censo) == 3 ~ coddepto_censo,
+                              nchar(coddepto_censo) == 2 ~ paste0("0", coddepto_censo),
+                              nchar(coddepto_censo) == 1 ~ paste0("00", coddepto_censo))) %>%
+  select(c(3,4,8,9))
+
+metadata <- geo_metadata
+
+base_nacional <- base_compilada %>% 
+#    mutate(coddepto_comp = case_when(codprov_comp == 23 & coddepto_comp == "002" ~ "001",
+#                                   codprov_comp == 23 & coddepto_comp == "004" ~ "003",
+#                                   TRUE ~ coddepto_comp)) %>% 
+  left_join(base_cod_censo) %>% 
+  left_join(., metadata, by = c("codprov_censo", "coddepto_censo"))
+
+write.xlsx(base_nacional, "base_nacional.xlsx")
+
+base <- read_excel("./base_nacional.xlsx") %>% 
+  mutate(cantidad22 = as.numeric(cantidad22),
+         edad = as.numeric(edad))
+```
+
+```{r armado base}
+base0 <-  base %>%
+  filter(!is.na(coddepto_censo)) %>% 
+  rename(varones = varon,
+         mujeres = mujer) %>% 
+  mutate(varones = as.numeric(varones),
+         mujeres = as.numeric(mujeres),
+         cantidad22 = ifelse(is.na(cantidad22), 0, cantidad22),
+         varones = ifelse(is.na(varones), 0, varones),
+         mujeres = ifelse(is.na(mujeres), 0, mujeres), 
+         quinquenio = case_when(edad >= 0 & edad <= 4 ~ "0-4",
+                                edad >= 5 & edad <= 9 ~ "5-9",
+                                edad >= 10 & edad <= 14 ~ "10-14",
+                                edad >= 15 & edad <= 19 ~ "15-19",
+                                edad >= 20 & edad <= 24 ~ "20-24",
+                                edad >= 25 & edad <= 29 ~ "25-29",
+                                edad >= 30 & edad <= 34 ~ "30-34",
+                                edad >= 35 & edad <= 39 ~ "35-39",
+                                edad >= 40 & edad <= 44 ~ "40-44",
+                                edad >= 45 & edad <= 49 ~ "45-49",
+                                edad >= 50 & edad <= 54 ~ "50-54",
+                                edad >= 55 & edad <= 59 ~ "55-59",
+                                edad >= 60 & edad <= 64 ~ "60-64",
+                                edad >= 65 & edad <= 69 ~ "65-69",
+                                edad >= 70 & edad <= 74 ~ "70-74",
+                                edad >= 75 & edad <= 79 ~ "75-79",
+                                edad >= 80 & edad <= 84 ~ "80-84",
+                                edad >= 85 & edad <= 89 ~ "85-89",
+                                edad >= 90 & edad <= 94 ~ "90-94",
+                                edad >= 95 & edad <= 99 ~ "95-99",
+                                edad >= 100 ~ "100 y más"),
+         tipo_poblacion = case_when(edad >= 0 & edad <= 4 ~ "Infancias",
+                                    edad >= 60 & edad <= 100 ~ "PAM", 
+                                    TRUE ~ "Centrales")) %>% 
+  mutate(cod_uni = paste0(codprov_censo, coddepto_censo)) %>% 
+  mutate(cod_uni = case_when(codprov_comp == 23 & coddepto_comp == "002" ~ "23002",
+                             codprov_comp == 23 & coddepto_comp == "004" ~ "23004",
+                             TRUE ~ cod_uni)) %>% 
+  group_by(cod_uni) %>% 
+  mutate(pob_total_depto = sum(cantidad22),
+         varones_total_depto = sum(varones),
+         mujeres_total_depto= sum(mujeres)) %>%
+  ungroup() %>% 
+  group_by(cod_uni, quinquenio) %>% 
+  mutate(total_q_depto = sum(cantidad22),
+         varones_q_depto = sum(varones),
+         mujeres_q_depto = sum(mujeres)) %>% 
+  ungroup() %>% 
+  group_by(cod_uni, tipo_poblacion) %>% 
+  mutate(total_grupo_depto = sum(cantidad22),
+         varones_grupo_depto = sum(varones),
+         mujeres_grupo_depto = sum(mujeres)) %>% 
+  ungroup() %>% 
+  group_by(codprov_censo, quinquenio) %>% 
+  mutate(total_q_prov = sum(cantidad22),
+         varones_q_prov = sum(varones),
+         mujeres_q_prov = sum(mujeres)) %>% 
+  ungroup() %>%
+  filter(!is.na(edad)) %>% 
+  left_join(base_proyecciones) %>% 
+  mutate(peso_depto_q = total_q_depto/total_q_prov,
+         prop_edad_q_depto = cantidad22/total_q_depto,
+         prop_grupo_depto22 = total_grupo_depto/pob_total_depto,
+         cantidad40 = variacion*cantidad22,
+         cantidad40_m = var_mujeres*mujeres,
+         cantidad40_v = var_varones*varones,
+         cantidad40 = ifelse(is.na(cantidad40), 0, cantidad40)) %>% 
+  group_by(cod_uni, tipo_poblacion) %>% 
+  mutate(total_grupo_depto40 = sum(cantidad40)) %>% 
+  ungroup() %>% 
+  group_by(cod_uni) %>% 
+  mutate(pob_total_depto40 = sum(cantidad40),
+         prop_grupo_depto40 = total_grupo_depto40/pob_total_depto40)
+
+#me faltan los totales de mujeres y varones
+na_count <- sapply(base0, function(x) sum(is.na(x)))
+print(na_count)
+write.xlsx(base0, "base_completa.xlsx")
+
+colnames(base0)
+
+demanda_depto <- base0 %>% 
+  filter(!is.na(tipo_poblacion)) %>% 
+  select(7,8, 11,12,16:20, 24:26,35, 39:41) %>% 
+  pivot_wider(names_from = tipo_poblacion, 
+              values_from = c(total_grupo_depto, varones_grupo_depto, mujeres_grupo_depto, prop_grupo_depto22, total_grupo_depto40, prop_grupo_depto40),
+              values_fn = first) 
+
+chequeo1 <- demanda_depto %>% 
+  group_by(name_prov) %>% 
+  summarise(pob_total_prov = sum(pob_total_depto),
+            pob_total_prov40 = sum(pob_total_depto40),
+            total_grupo_prov_Infancias = sum(total_grupo_depto_Infancias),
+            total_grupo_prov_PAM = sum(total_grupo_depto_PAM),
+            total_grupo_prov_Infancias = sum(total_grupo_depto_Infancias),
+            total_grupo_prov40_Infancias = sum(total_grupo_depto40_Infancias),
+            total_grupo_prov40_PAM = sum(total_grupo_depto40_PAM),
+            prop_grupo_prov_Infancias = total_grupo_prov_Infancias/pob_total_prov,
+            prop_grupo_prov_PAM = total_grupo_prov_PAM/pob_total_prov,
+            prop_grupo_prov40_Infancias = total_grupo_prov40_Infancias/pob_total_prov40,
+            prop_grupo_prov40_PAM = total_grupo_prov40_PAM/pob_total_prov40)
+
+chequeo2 <- chequeo1 %>% 
+  mutate(pais = "Arg") %>% 
+  group_by(pais) %>% 
+  summarise(pob_total_pais = sum(pob_total_prov),
+            pob_total_pais40 = sum(pob_total_prov40),
+            total_grupo_pais_Infancias = sum(total_grupo_prov_Infancias),
+            total_grupo_pais_PAM = sum(total_grupo_prov_PAM),
+            total_grupo_pais_Infancias = sum(total_grupo_prov_Infancias),
+            total_grupo_pais40_Infancias = sum(total_grupo_prov40_Infancias),
+            total_grupo_pais40_PAM = sum(total_grupo_prov40_PAM),
+            prop_grupo_pais_Infancias = total_grupo_pais_Infancias/pob_total_pais,
+            prop_grupo_pais_PAM = total_grupo_pais_PAM/pob_total_pais,
+            prop_grupo_pais40_Infancias = total_grupo_pais40_Infancias/pob_total_pais40,
+            prop_grupo_pais40_PAM = total_grupo_pais40_PAM/pob_total_pais40)
+
+write.xlsx(demanda_depto, "demanda_depto.xlsx")
+
+total_nacional <- demanda_depto %>% 
+  summarise(pob_total_pais = sum(pob_total_depto),
+            pob_total_pais40 = sum(pob_total_depto40),
+            total_grupo_pais_Infancias = sum(total_grupo_depto_Infancias),
+            total_grupo_pais_PAM = sum(total_grupo_depto_PAM),
+            total_grupo_pais_Infancias = sum(total_grupo_depto_Infancias),
+            total_grupo_pais40_Infancias = sum(total_grupo_depto40_Infancias),
+            total_grupo_pais40_PAM = sum(total_grupo_depto40_PAM),
+            prop_grupo_pais_Infancias = total_grupo_pais_Infancias/pob_total_pais,
+            prop_grupo_pais_PAM = total_grupo_pais_PAM/pob_total_pais,
+            prop_grupo_pais40_Infancias = total_grupo_pais40_Infancias/pob_total_pais40,
+            prop_grupo_pais40_PAM = total_grupo_pais40_PAM/pob_total_pais40)
+
+hist(demanda_depto$pob_total_depto)
+summary(demanda_depto$pob_total_depto)
+```
+
+```{r}
+tipologias <- demanda_depto %>% 
+  mutate(diferencia_Infancias = prop_grupo_depto40_Infancias - prop_grupo_depto22_Infancias,
+         diferencia_PAM = prop_grupo_depto40_PAM - prop_grupo_depto22_PAM,
+         tipo_dif_PI = case_when(diferencia_Infancias < -0.02 ~ "A",
+                                 diferencia_Infancias >= -0.02 & diferencia_Infancias < -0.01 ~ "I",
+                                 diferencia_Infancias < 0 & diferencia_Infancias >= -0.01 ~ "B",
+                                 diferencia_Infancias == 0 ~ "C"),
+         tipo_dif_PM = case_when(diferencia_PAM > 0.06 ~ "A",
+                                 diferencia_PAM <= 0.06 & diferencia_PAM > 0.04 ~ "I",
+                                 diferencia_PAM <= 0.04 & diferencia_PAM >= 0.02 ~ "B",
+                                 diferencia_PAM == 0 ~ "C"),
+         combinacion_dif = paste0(tipo_dif_PI, tipo_dif_PM),
+         cambio = case_when(prop_grupo_depto22_Infancias < 0.062 & prop_grupo_depto22_PAM < 0.1624 & prop_grupo_depto40_PAM > 0.2064 ~ "ni_PI",
+                            prop_grupo_depto22_Infancias > 0.062 & prop_grupo_depto40_PAM > 0.2064 ~ "PI_PM",
+                            prop_grupo_depto22_PAM > 0.1624 & prop_grupo_depto40_Infancias > 0.0516 ~ "PM_PI",
+                            prop_grupo_depto22_Infancias > 0.062 & prop_grupo_depto40_Infancias > 0.0516 ~ "PI_PI",
+                            prop_grupo_depto22_PAM > 0.1624 & prop_grupo_depto40_PAM > 0.2064 ~ "PM_PM",
+                            TRUE ~ "nini"))
+
+write.xlsx(tipologias, "tipologias.xlsx")
+
+resumen_cambio <- tipologias %>% 
+  group_by(name_prov, cambio) %>% 
+  summarise(total = n()) %>% 
+  pivot_wider(names_from = cambio, values_from = total) %>% 
+  mutate(total = PI_PI + PI_)
+
+resumen_combinacion_dif <- tipologias %>% 
+  group_by(name_prov, cambio) %>% 
+  summarise(total = n()) %>% 
+  pivot_wider(names_from = cambio, values_from = total) %>% 
+  mutate(total = PI_PI + PI_)
+
+# Alto PI: < -0.02
+# Intermedio PI: < -0.01 & > -0.02
+# Bajo PI: > -0.01
+# Cero PI: = 0
+
+# Alto PI: > 0.06
+# Intermedio PI: < 0.06 & > 0.04
+# Bajo PI: < 0.04 & > 0.02
+# Cero PM: = 0
+```
+
+
+```{r base subgrupos}
+base2 <-  base %>%
+  filter(!is.na(coddepto_censo)) %>% 
+  rename(varones = varon,
+         mujeres = mujer) %>% 
+  mutate(varones = as.numeric(varones),
+         mujeres = as.numeric(mujeres),
+         cantidad22 = ifelse(is.na(cantidad22), 0, cantidad22),
+         varones = ifelse(is.na(varones), 0, varones),
+         mujeres = ifelse(is.na(mujeres), 0, mujeres), 
+         quinquenio = case_when(edad >= 0 & edad <= 4 ~ "0-4",
+                                edad >= 5 & edad <= 9 ~ "5-9",
+                                edad >= 10 & edad <= 14 ~ "10-14",
+                                edad >= 15 & edad <= 19 ~ "15-19",
+                                edad >= 20 & edad <= 24 ~ "20-24",
+                                edad >= 25 & edad <= 29 ~ "25-29",
+                                edad >= 30 & edad <= 34 ~ "30-34",
+                                edad >= 35 & edad <= 39 ~ "35-39",
+                                edad >= 40 & edad <= 44 ~ "40-44",
+                                edad >= 45 & edad <= 49 ~ "45-49",
+                                edad >= 50 & edad <= 54 ~ "50-54",
+                                edad >= 55 & edad <= 59 ~ "55-59",
+                                edad >= 60 & edad <= 64 ~ "60-64",
+                                edad >= 65 & edad <= 69 ~ "65-69",
+                                edad >= 70 & edad <= 74 ~ "70-74",
+                                edad >= 75 & edad <= 79 ~ "75-79",
+                                edad >= 80 & edad <= 84 ~ "80-84",
+                                edad >= 85 & edad <= 89 ~ "85-89",
+                                edad >= 90 & edad <= 94 ~ "90-94",
+                                edad >= 95 & edad <= 99 ~ "95-99",
+                                edad >= 100 ~ "100 y más"),
+         tipo_poblacion = case_when(edad >= 0 & edad <= 2 ~ "Infancias1",
+                                    edad >= 3 & edad <= 4 ~ "Infancias2",
+                                    edad >= 60 & edad <= 74 ~ "PAM1",
+                                    edad >= 75 & edad <= 100 ~ "PAM2", 
+                                    TRUE ~ "Centrales")) %>% 
+  mutate(cod_uni = paste0(codprov_censo, coddepto_censo)) %>% 
+  mutate(cod_uni = case_when(codprov_comp == 23 & coddepto_comp == "002" ~ "23002",
+                             codprov_comp == 23 & coddepto_comp == "004" ~ "23004",
+                             TRUE ~ cod_uni)) %>% 
+  group_by(cod_uni) %>% 
+  mutate(pob_total_depto = sum(cantidad22),
+         varones_total_depto = sum(varones),
+         mujeres_total_depto= sum(mujeres)) %>%
+  ungroup() %>% 
+  group_by(cod_uni, quinquenio) %>% 
+  mutate(total_q_depto = sum(cantidad22),
+         varones_q_depto = sum(varones),
+         mujeres_q_depto = sum(mujeres)) %>% 
+  ungroup() %>% 
+  group_by(cod_uni, tipo_poblacion) %>% 
+  mutate(total_grupo_depto = sum(cantidad22),
+         varones_grupo_depto = sum(varones),
+         mujeres_grupo_depto = sum(mujeres)) %>% 
+  ungroup() %>% 
+  group_by(codprov_censo, quinquenio) %>% 
+  mutate(total_q_prov = sum(cantidad22),
+         varones_q_prov = sum(varones),
+         mujeres_q_prov = sum(mujeres)) %>% 
+  ungroup() %>%
+  filter(!is.na(edad)) %>% 
+  left_join(base_proyecciones) %>% 
+   mutate(peso_depto_q = total_q_depto/total_q_prov,
+         prop_edad_q_depto = cantidad22/total_q_depto,
+         prop_grupo_depto22 = total_grupo_depto/pob_total_depto,
+         cantidad40 = variacion*cantidad22,
+         cantidad40_m = var_mujeres*mujeres,
+         cantidad40_v = var_varones*varones,
+         cantidad40 = ifelse(is.na(cantidad40), 0, cantidad40)) %>% 
+  group_by(cod_uni, tipo_poblacion) %>% 
+  mutate(total_grupo_depto40 = sum(cantidad40)) %>% 
+  ungroup() %>% 
+  group_by(cod_uni) %>% 
+  mutate(pob_total_depto40 = sum(cantidad40),
+         prop_grupo_depto40 = total_grupo_depto40/pob_total_depto40)
+
+colnames(base2)
+
+demanda_depto_grupos <- base2 %>% 
+  filter(!is.na(tipo_poblacion)) %>% 
+  select(7,8, 11,12,16, 18:20, 24:26,35, 39:41) %>% 
+  pivot_wider(names_from = tipo_poblacion, 
+              values_from = c(total_grupo_depto, varones_grupo_depto, mujeres_grupo_depto, prop_grupo_depto22, total_grupo_depto40, prop_grupo_depto40),
+              values_fn = first)
+
+write.xlsx(demanda_depto_grupos, "demanda_depto_grupos.xlsx")
+
+```
+
+```{r base provincial}
+base_cod_censo_prov <- base_cod_censo %>% 
+  summarise(codprov_comp, codprov_censo) %>% 
+  distinct()
+
+metadata_prov <- geo_metadata %>% 
+  summarise(codprov, codprov_censo, name_prov, codprov_iso) %>%
+  distinct()
+
+base_nacional_prov <- base_compilada %>% 
+  filter(is.na(coddepto_comp)) %>% 
+  select(1:5) %>% 
+  left_join(base_cod_censo_prov) %>% 
+  left_join(., metadata_prov, by = c("codprov_censo"))
+
+write.xlsx(base_nacional_prov, "base_nacional_prov.xlsx")
+
+base <- read_excel("./base_nacional_prov.xlsx") %>% 
+  mutate(cantidad22 = as.numeric(cantidad22),
+         edad = as.numeric(edad))
+
+base0 <-  base %>%
+  mutate(cantidad22 = ifelse(is.na(cantidad22), 0, cantidad22),
+         quinquenio = case_when(edad >= 0 & edad <= 4 ~ "0-4",
+                                edad >= 5 & edad <= 9 ~ "5-9",
+                                edad >= 10 & edad <= 14 ~ "10-14",
+                                edad >= 15 & edad <= 19 ~ "15-19",
+                                edad >= 20 & edad <= 24 ~ "20-24",
+                                edad >= 25 & edad <= 29 ~ "25-29",
+                                edad >= 30 & edad <= 34 ~ "30-34",
+                                edad >= 35 & edad <= 39 ~ "35-39",
+                                edad >= 40 & edad <= 44 ~ "40-44",
+                                edad >= 45 & edad <= 49 ~ "45-49",
+                                edad >= 50 & edad <= 54 ~ "50-54",
+                                edad >= 55 & edad <= 59 ~ "55-59",
+                                edad >= 60 & edad <= 64 ~ "60-64",
+                                edad >= 65 & edad <= 69 ~ "65-69",
+                                edad >= 70 & edad <= 74 ~ "70-74",
+                                edad >= 75 & edad <= 79 ~ "75-79",
+                                edad >= 80 & edad <= 84 ~ "80-84",
+                                edad >= 85 & edad <= 89 ~ "85-89",
+                                edad >= 90 & edad <= 94 ~ "90-94",
+                                edad >= 95 & edad <= 99 ~ "95-99",
+                                edad >= 100 ~ "100 y más"),
+         tipo_poblacion = case_when(edad >= 0 & edad <= 4 ~ "Infancias",
+                                    edad >= 60 & edad <= 100 ~ "PAM", 
+                                    TRUE ~ "Centrales")) %>% 
+  group_by(codprov_censo) %>% 
+  mutate(pob_total_prov = sum(cantidad22)) %>% 
+  ungroup() %>%
+    group_by(codprov_censo, tipo_poblacion) %>% 
+  mutate(total_grupo_prov = sum(cantidad22)) %>% 
+  ungroup() %>%
+  filter(!is.na(edad)) %>% 
+  left_join(base_proyecciones) %>% 
+  mutate(prop_grupo_prov22 = total_grupo_prov/pob_total_prov,
+         cantidad40_prov = variacion*cantidad22,
+         cantidad40_prov = ifelse(is.na(cantidad40_prov), 0, cantidad40_prov)) %>% 
+  group_by(codprov_censo, tipo_poblacion) %>% 
+  mutate(total_grupo_prov40 = sum(cantidad40_prov)) %>% 
+  ungroup() %>% 
+  group_by(codprov_censo) %>% 
+  mutate(pob_total_prov40 = sum(cantidad40_prov),
+         prop_grupo_prov40 = total_grupo_prov40/pob_total_prov40)
+
+demanda_prov_grupos <- base0 %>% 
+  filter(!is.na(tipo_poblacion)) %>% 
+  select(5:8, 11:13, 17, 19:21) %>% 
+  pivot_wider(names_from = tipo_poblacion, 
+              values_from = c(total_grupo_prov,
+                              prop_grupo_prov22, 
+                              total_grupo_prov40,
+                              prop_grupo_prov40),
+              values_fn = first)
+
+write.xlsx(demanda_prov_grupos, "demanda_prov_grupos.xlsx")
+
+base1 <-  base %>%
+  mutate(cantidad22 = ifelse(is.na(cantidad22), 0, cantidad22),
+         quinquenio = case_when(edad >= 0 & edad <= 4 ~ "0-4",
+                                edad >= 5 & edad <= 9 ~ "5-9",
+                                edad >= 10 & edad <= 14 ~ "10-14",
+                                edad >= 15 & edad <= 19 ~ "15-19",
+                                edad >= 20 & edad <= 24 ~ "20-24",
+                                edad >= 25 & edad <= 29 ~ "25-29",
+                                edad >= 30 & edad <= 34 ~ "30-34",
+                                edad >= 35 & edad <= 39 ~ "35-39",
+                                edad >= 40 & edad <= 44 ~ "40-44",
+                                edad >= 45 & edad <= 49 ~ "45-49",
+                                edad >= 50 & edad <= 54 ~ "50-54",
+                                edad >= 55 & edad <= 59 ~ "55-59",
+                                edad >= 60 & edad <= 64 ~ "60-64",
+                                edad >= 65 & edad <= 69 ~ "65-69",
+                                edad >= 70 & edad <= 74 ~ "70-74",
+                                edad >= 75 & edad <= 79 ~ "75-79",
+                                edad >= 80 & edad <= 84 ~ "80-84",
+                                edad >= 85 & edad <= 89 ~ "85-89",
+                                edad >= 90 & edad <= 94 ~ "90-94",
+                                edad >= 95 & edad <= 99 ~ "95-99",
+                                edad >= 100 ~ "100 y más"),
+         tipo_poblacion = case_when(edad >= 0 & edad <= 2 ~ "Infancias1",
+                                    edad >= 3 & edad <= 4 ~ "Infancias2",
+                                    edad >= 60 & edad <= 74 ~ "PAM1", 
+                                    edad >= 75 & edad <= 100 ~ "PAM2", 
+                                    TRUE ~ "Centrales")) %>% 
+  group_by(codprov_censo) %>% 
+  mutate(pob_total_prov = sum(cantidad22)) %>% 
+  ungroup() %>%
+    group_by(codprov_censo, tipo_poblacion) %>% 
+  mutate(total_grupo_prov = sum(cantidad22)) %>% 
+  ungroup() %>%
+  filter(!is.na(edad)) %>% 
+  left_join(base_proyecciones) %>% 
+  mutate(prop_grupo_prov22 = total_grupo_prov/pob_total_prov,
+         cantidad40_prov = variacion*cantidad22,
+         cantidad40_prov = ifelse(is.na(cantidad40_prov), 0, cantidad40_prov)) %>% 
+  group_by(codprov_censo, tipo_poblacion) %>% 
+  mutate(total_grupo_prov40 = sum(cantidad40_prov)) %>% 
+  ungroup() %>% 
+  group_by(codprov_censo) %>% 
+  mutate(pob_total_prov40 = sum(cantidad40_prov),
+         prop_grupo_prov40 = total_grupo_prov40/pob_total_prov40)
+
+demanda_prov_pob <- base1 %>% 
+  filter(!is.na(tipo_poblacion)) %>% 
+  select(5:8, 11:13, 17, 19:21) %>% 
+  pivot_wider(names_from = tipo_poblacion, 
+              values_from = c(total_grupo_prov,
+                              prop_grupo_prov22, 
+                              total_grupo_prov40,
+                              prop_grupo_prov40),
+              values_fn = first) 
+
+write.xlsx(demanda_prov_pob, "demanda_prov_sub.xlsx")
+
+```
+
+```{r mapeo argentina}
+get_geo("ARGENTINA") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto22_Infancias)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(name = "Infantilización 2022", 
+                       palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+
+get_geo("ARGENTINA") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto22_PAM)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(name = "Envejecimiento 2022", 
+                       palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+
+get_geo("ARGENTINA") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto40_Infancias)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(name = "Infantilización 2040", 
+                       palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+
+get_geo("ARGENTINA") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto40_PAM)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(name = "Envejecimiento 2040",
+                       palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+```
+
+```{r mapeo provincias} 
+
+base2 <- base %>% 
+  filter(!is.na(coddepto_censo)) %>% 
+  rename(varones = varon,
+         mujeres = mujer) %>% 
+  mutate(varones = as.numeric(varones),
+         mujeres = as.numeric(mujeres),
+         cantidad22 = ifelse(is.na(cantidad22), 0, cantidad22),
+         varones = ifelse(is.na(varones), 0, varones),
+         mujeres = ifelse(is.na(mujeres), 0, mujeres), 
+         quinquenio = case_when(edad >= 0 & edad <= 4 ~ "0-4",
+                                edad >= 5 & edad <= 9 ~ "5-9",
+                                edad >= 10 & edad <= 14 ~ "10-14",
+                                edad >= 15 & edad <= 19 ~ "15-19",
+                                edad >= 20 & edad <= 24 ~ "20-24",
+                                edad >= 25 & edad <= 29 ~ "25-29",
+                                edad >= 30 & edad <= 34 ~ "30-34",
+                                edad >= 35 & edad <= 39 ~ "35-39",
+                                edad >= 40 & edad <= 44 ~ "40-44",
+                                edad >= 45 & edad <= 49 ~ "45-49",
+                                edad >= 50 & edad <= 54 ~ "50-54",
+                                edad >= 55 & edad <= 59 ~ "55-59",
+                                edad >= 60 & edad <= 64 ~ "60-64",
+                                edad >= 65 & edad <= 69 ~ "65-69",
+                                edad >= 70 & edad <= 74 ~ "70-74",
+                                edad >= 75 & edad <= 79 ~ "75-79",
+                                edad >= 80 & edad <= 84 ~ "80-84",
+                                edad >= 85 & edad <= 89 ~ "85-89",
+                                edad >= 90 & edad <= 94 ~ "90-94",
+                                edad >= 95 & edad <= 99 ~ "95-99",
+                                edad >= 100 ~ "100 y más"),
+         tipo_poblacion = case_when(edad >= 0 & edad <= 4 ~ "Infancias",
+                                    edad >= 65 & edad <= 100 ~ "PAM", 
+                                    TRUE ~ "Centrales"),
+         codprov_censo = case_when(codprov_comp == 23 & coddepto_comp == "002" ~ "94",
+                                   codprov_comp == 23 & coddepto_comp == "004" ~ "94",
+                                   TRUE ~ codprov_censo)) %>% 
+  group_by(codprov_censo) %>% 
+  mutate(pob_total_prov = sum(cantidad22),
+         pob_varones_prov = sum(varones),
+         pob_mujeres_prov = sum(mujeres)) %>%
+  ungroup() %>%
+    group_by(codprov_censo, tipo_poblacion) %>% 
+  mutate(total_grupo_prov = sum(cantidad22),
+         varones_grupo_prov = sum(varones),
+         mujeres_grupo_prov = sum(mujeres)) %>% 
+  ungroup() %>%
+  filter(!is.na(edad)) %>% 
+  left_join(base_proyecciones) %>% 
+  mutate(prop_grupo_prov22 = total_grupo_prov/pob_total_prov,
+         cantidad40_m_prov = var_mujeres*mujeres,
+         cantidad40_v_prov = var_varones*varones,
+         cantidad40_prov = variacion*cantidad22,
+         cantidad40_prov = ifelse(is.na(cantidad40_prov), 0, cantidad40_prov)) %>% 
+  group_by(codprov_censo, tipo_poblacion) %>% 
+  mutate(total_grupo_prov40 = sum(cantidad40_prov)) %>% 
+  ungroup() %>% 
+  group_by(codprov_censo) %>% 
+  mutate(pob_total_prov40 = sum(cantidad40_prov),
+         prop_grupo_prov40 = total_grupo_prov40/pob_total_prov40)
+
+demanda_prov_grupos <- base2 %>% 
+  filter(!is.na(tipo_poblacion)) %>% 
+  select(7:12, 16:22, 26, 30:32) %>% 
+  pivot_wider(names_from = tipo_poblacion, 
+              values_from = c(total_grupo_prov,
+                              prop_grupo_prov22, 
+                              total_grupo_prov40,
+                              prop_grupo_prov40),
+              values_fn = first)
+
+write.xlsx(demanda_prov_grupos, "demanda_prov_grupos.xlsx")
+```
+
+```{r mapeo provincias}
+limites_env <- c(0, 0.22) 
+limites_inf <- c(0, 0.085) 
+
+get_geo("ARGENTINA", level = "provincia") %>% 
+  left_join(demanda_prov_grupos) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_prov22_Infancias)) +
+  scale_fill_distiller(name = "% Primera Infancia 2022",
+                       palette = "Spectral", 
+                       direction = -1, 
+                       limits = limites_inf) +
+  theme_void()
+#  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+#        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+
+get_geo("ARGENTINA", level = "provincia") %>% 
+  left_join(demanda_prov_grupos) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_prov40_Infancias)) +
+  scale_fill_distiller(name = "% Primera Infancia 2040",
+                       palette = "Spectral", 
+                       direction = -1,
+                       limits = limites_inf) +
+  theme_void()
+#  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+#        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+
+get_geo("ARGENTINA", level = "provincia") %>% 
+  left_join(demanda_prov_grupos) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_prov22_PAM)) +
+  scale_fill_distiller(name = "% Personas Mayores 2022",
+                       palette = "Spectral", 
+                       direction = -1,
+                       limits = limites_env) +
+  theme_void() 
+#  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+#        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+
+get_geo("ARGENTINA", level = "provincia") %>% 
+  left_join(demanda_prov_grupos) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_prov40_PAM)) +
+  scale_fill_distiller(name = "% Personas Mayores 2040",
+                       palette = "Spectral", 
+                       direction = -1,
+                       limits = limites_env) +
+  theme_void() 
+#  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+#        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+```
+
+```{r mapeo PBA}
+get_geo("BUENOS AIRES") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto22_Infancias)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+
+get_geo("BUENOS AIRES") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto40_Infancias)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+
+get_geo("BUENOS AIRES") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto22_PAM)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+
+get_geo("BUENOS AIRES") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto40_PAM)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+```
+
+```{r mapeo CABA}
+get_geo("CABA") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto22_Infancias)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(name = "Infantilización 2022",
+                       palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+
+get_geo("CABA") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto40_Infancias)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(name = "Infantilización 2040",
+                       palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+
+get_geo("CABA") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto22_PAM)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(name = "Envejecimiento 2022",
+                       palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+
+get_geo("CABA") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto40_PAM)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(name = "Envejecimiento 2040",
+                       palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+```
+
+```{r mapeo Misiones}
+get_geo("MISIONES") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto22_Infancias)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+
+get_geo("MISIONES") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto40_Infancias)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+
+get_geo("MISIONES") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto22_PAM)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+
+get_geo("MISIONES") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto40_PAM)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+```
+
+```{r mapeo Salta}
+get_geo("SALTA") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto22_Infancias)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+
+get_geo("SALTA") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto40_Infancias)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+
+get_geo("SALTA") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto22_PAM)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+
+get_geo("SALTA") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto40_PAM)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+```
+
+```{r mapeo Salta}
+get_geo("ENTRE RIOS") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto22_Infancias)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(name = "Infancias 2022",
+                       palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+
+get_geo("ENTRE RIOS") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto40_Infancias)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(name = "Infancias 2040",
+                       palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+
+get_geo("ENTRE RIOS") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto22_PAM)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(name = "Envejecimiento 2022",
+                       palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+
+get_geo("ENTRE RIOS") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto40_PAM)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(name = "Envejecimiento 2040",
+                       palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+```
+
+```{r mapeo Salta}
+get_geo("ENTRE RIOS") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = total_grupo_depto22_Infancias)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+
+get_geo("ENTRE RIOS") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = total_grupo_depto40_Infancias)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+
+get_geo("ENTRE RIOS") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto22_PAM)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+
+get_geo("ENTRE RIOS") %>% 
+  left_join(demanda_depto) %>% 
+  ggplot() +
+  geom_sf(aes(fill = prop_grupo_depto40_PAM)) +
+#  scale_fill_viridis_c(option = "inferno") +                               negro y violeta
+  scale_fill_distiller(palette = "Spectral", direction = -1)  +
+  theme_void() +
+  theme(panel.background = element_rect(fill = "#f5f5f5ff", color = NA),
+        plot.background = element_rect(fill = "#f5f5f5ff", color = NA))
+```
+
