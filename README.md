@@ -27,10 +27,8 @@ Bibtex:
 
 ## Índice de archivos
 
-- Libro de códigos de la Base de Oferta de Infraestructura de Cuidados para la Primera Infancia
-- Libro de códigos de la Base de Oferta de Infraestructura de Cuidados para Personas Mayores
-- Libro de códigos de la Base de Demanda
--
+- Libro de códigos 
+- 
 -
 -
 
