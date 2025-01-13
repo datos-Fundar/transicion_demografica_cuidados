@@ -6,7 +6,7 @@ author: "Géneros Fundar"
 
 ## Base demanda
 
-Código para armar la base de intensidad de demanda de cuidados en Argentina, en función de bases de datos del Censo 2022, proyecciones poblacionales del Censo 2010 y la Escala de Argentina determinada por la Cepal (2021)
+Código para armar la base de intensidad de demanda de cuidados en Argentina, en función de bases de datos del Censo 2022, proyecciones poblacionales del Censo 2010
 
 ```{r librerias}
 library(tidyverse)
@@ -20,7 +20,7 @@ library(RColorBrewer)
 options(scipen = 999)
 ```
 
-Usamos las bases de Estructura por sexo y edad de la población por provincia del Censo 2022 de INDEC - Cuadro 4.15. Provincia del Neuquén. Total de población, por sexo registrado al nacer e índice de feminidad, según edad y departamento. Año 2022 [https://www.indec.gob.ar/indec/web/Nivel4-Tema-2-41-165] 
+Usamos las bases de Estructura por sexo y edad del Censo 2022 de INDEC. Total de población, por sexo registrado al nacer e índice de feminidad, según edad y departamento. Año 2022 [https://www.indec.gob.ar/indec/web/Nivel4-Tema-2-41-165] 
 
 ```{r limpieza base}
 base_proyecciones <- read_excel("./base_proyecciones.xlsx") %>% 
