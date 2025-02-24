@@ -1,0 +1,364 @@
+﻿"Cantidad de viviendas colectivas del tipo ""Hogar de personas mayores / Geriátrico"" por departamento (Censo 2022, INDEC)
+";;
+;;
+Departamento;Provincia;Cantidad_de_RLE
+Adolfo Alsina;Buenos Aires;13
+Adolfo Gonzales Chaves;Buenos Aires;5
+Alberti;Buenos Aires;2
+Almirante Brown;Buenos Aires;29
+Avellaneda;Buenos Aires;23
+Ayacucho;Buenos Aires;9
+Azul;Buenos Aires;10
+Bahía Blanca;Buenos Aires;46
+Balcarce;Buenos Aires;17
+Baradero;Buenos Aires;11
+Arrecifes;Buenos Aires;7
+Benito Juárez;Buenos Aires;8
+Berazategui;Buenos Aires;4
+Berisso;Buenos Aires;7
+Bolívar;Buenos Aires;25
+Bragado;Buenos Aires;9
+Brandsen;Buenos Aires;2
+Campana;Buenos Aires;3
+Cañuelas;Buenos Aires;1
+Capitán Sarmiento;Buenos Aires;3
+Carlos Casares;Buenos Aires;6
+Carlos Tejedor;Buenos Aires;2
+Carmen de Areco;Buenos Aires;5
+Castelli;Buenos Aires;1
+Colón;Buenos Aires;5
+Coronel de Marina Leonardo Rosales;Buenos Aires;12
+Coronel Dorrego;Buenos Aires;10
+Coronel Pringles;Buenos Aires;21
+Coronel Suárez;Buenos Aires;14
+Chacabuco;Buenos Aires;9
+Chascomús;Buenos Aires;8
+Chivilcoy;Buenos Aires;9
+Daireaux;Buenos Aires;4
+Dolores;Buenos Aires;4
+Escobar;Buenos Aires;9
+Esteban Echeverría;Buenos Aires;14
+Exaltación de la Cruz;Buenos Aires;2
+Ezeiza;Buenos Aires;4
+Florencio Varela;Buenos Aires;7
+Florentino Ameghino;Buenos Aires;2
+General Alvarado;Buenos Aires;7
+General Alvear;Buenos Aires;1
+General Arenales;Buenos Aires;6
+General Belgrano;Buenos Aires;5
+General Guido;Buenos Aires;2
+General Juan Madariaga;Buenos Aires;2
+General La Madrid;Buenos Aires;4
+General Lavalle;Buenos Aires;1
+General Paz;Buenos Aires;3
+General Pinto;Buenos Aires;3
+General Pueyrredón;Buenos Aires;116
+General Rodríguez;Buenos Aires;4
+General San Martín;Buenos Aires;43
+General Viamonte;Buenos Aires;10
+General Villegas;Buenos Aires;12
+Guaminí;Buenos Aires;3
+Hipólito Yrigoyen;Buenos Aires;3
+Hurlingham;Buenos Aires;9
+Ituzaingó;Buenos Aires;28
+José C. Paz;Buenos Aires;5
+Junín;Buenos Aires;23
+La Costa;Buenos Aires;3
+La Matanza;Buenos Aires;60
+Lanús;Buenos Aires;27
+La Plata;Buenos Aires;43
+Laprida;Buenos Aires;3
+Las Flores;Buenos Aires;5
+Leandro N. Alem;Buenos Aires;8
+Lezama;Buenos Aires;1
+Lincoln;Buenos Aires;15
+Lobería;Buenos Aires;6
+Lobos;Buenos Aires;10
+Lomas de Zamora;Buenos Aires;42
+Magdalena;Buenos Aires;3
+Maipú;Buenos Aires;4
+Malvinas Argentinas;Buenos Aires;7
+Mar Chiquita;Buenos Aires;2
+Marcos Paz;Buenos Aires;1
+Mercedes;Buenos Aires;20
+Merlo;Buenos Aires;8
+Monte;Buenos Aires;6
+Monte Hermoso;Buenos Aires;1
+Moreno;Buenos Aires;13
+Morón;Buenos Aires;25
+Necochea;Buenos Aires;16
+9 de Julio;Buenos Aires;12
+Olavarría;Buenos Aires;31
+Patagones;Buenos Aires;11
+Pehuajó;Buenos Aires;8
+Pellegrini;Buenos Aires;1
+Pergamino;Buenos Aires;14
+Pila;Buenos Aires;1
+Pilar;Buenos Aires;6
+Pinamar;Buenos Aires;2
+Presidente Perón;Buenos Aires;2
+Puan;Buenos Aires;8
+Quilmes;Buenos Aires;30
+Ramallo;Buenos Aires;2
+Rauch;Buenos Aires;6
+Rivadavia;Buenos Aires;6
+Roque Pérez;Buenos Aires;2
+Saavedra;Buenos Aires;12
+Saladillo;Buenos Aires;11
+Salto;Buenos Aires;7
+Salliqueló;Buenos Aires;5
+San Andrés de Giles;Buenos Aires;1
+San Antonio de Areco;Buenos Aires;3
+San Cayetano;Buenos Aires;3
+San Fernando;Buenos Aires;11
+San Isidro;Buenos Aires;34
+San Miguel;Buenos Aires;16
+San Nicolás;Buenos Aires;15
+San Pedro;Buenos Aires;8
+San Vicente;Buenos Aires;1
+Suipacha;Buenos Aires;1
+Tandil;Buenos Aires;44
+Tapalqué;Buenos Aires;2
+Tigre;Buenos Aires;8
+Tordillo;Buenos Aires;1
+Tornquist;Buenos Aires;4
+Trenque Lauquen;Buenos Aires;11
+Tres Arroyos;Buenos Aires;28
+Tres de Febrero;Buenos Aires;30
+Tres Lomas;Buenos Aires;4
+25 de Mayo;Buenos Aires;5
+Vicente López;Buenos Aires;43
+Villa Gesell;Buenos Aires;3
+Villarino;Buenos Aires;4
+Zárate;Buenos Aires;8
+Comuna 1;CABA;13
+Comuna 2;CABA;16
+Comuna 3;CABA;22
+Comuna 4;CABA;12
+Comuna 5;CABA;40
+Comuna 6;CABA;36
+Comuna 7;CABA;52
+Comuna 8;CABA;2
+Comuna 9;CABA;26
+Comuna 10;CABA;29
+Comuna 11;CABA;31
+Comuna 12;CABA;46
+Comuna 13;CABA;32
+Comuna 14;CABA;18
+Comuna 15;CABA;26
+Andalgalá;Catamarca;1
+Belén;Catamarca;1
+Capital;Catamarca;3
+Santa María;Catamarca;1
+Tinogasta;Catamarca;1
+Valle Viejo;Catamarca;1
+Almirante Brown;Chaco;1
+Bermejo;Chaco;1
+Comandante Fernández;Chaco;2
+Chacabuco;Chaco;1
+12 de Octubre;Chaco;1
+2 de Abril;Chaco;1
+General Donovan;Chaco;1
+Libertador General San Martín;Chaco;3
+Maipú;Chaco;1
+Mayor Luis J. Fontana;Chaco;1
+O'Higgins;Chaco;1
+Presidencia de la Plaza;Chaco;1
+San Fernando;Chaco;7
+San Lorenzo;Chaco;1
+Sargento Cabral;Chaco;1
+25 de Mayo;Chaco;1
+Biedma;Chubut;5
+Cushamen;Chubut;1
+Escalante;Chubut;5
+Futaleufú;Chubut;4
+Gaiman;Chubut;3
+Rawson;Chubut;11
+Río Senguer;Chubut;1
+Sarmiento;Chubut;1
+Tehuelches;Chubut;2
+Telsen;Chubut;1
+Calamuchita;Córdoba;10
+Capital;Córdoba;132
+Colón;Córdoba;34
+Cruz del Eje;Córdoba;4
+General Roca;Córdoba;10
+General San Martín;Córdoba;34
+Ischilín;Córdoba;3
+Juárez Celman;Córdoba;20
+Marcos Juárez;Córdoba;28
+Minas;Córdoba;1
+Presidente Roque Sáenz Peña;Córdoba;11
+Punilla;Córdoba;40
+Río Cuarto;Córdoba;76
+Río Primero;Córdoba;7
+Río Seco;Córdoba;1
+Río Segundo;Córdoba;36
+San Alberto;Córdoba;2
+San Javier;Córdoba;5
+San Justo;Córdoba;62
+Santa María;Córdoba;23
+Sobremonte;Córdoba;1
+Tercero Arriba;Córdoba;39
+Tulumba;Córdoba;1
+Unión;Córdoba;38
+Bella Vista;Corrientes;2
+Capital;Corrientes;9
+Curuzú Cuatiá;Corrientes;2
+Empedrado;Corrientes;1
+General Alvear;Corrientes;1
+Goya;Corrientes;2
+Lavalle;Corrientes;1
+Mburucuyá;Corrientes;2
+Mercedes;Corrientes;1
+Monte Caseros;Corrientes;1
+Paso de los Libres;Corrientes;2
+Saladas;Corrientes;1
+San Luis del Palmar;Corrientes;1
+San Martín;Corrientes;1
+San Miguel;Corrientes;1
+San Roque;Corrientes;2
+Colón;Entre Ríos;18
+Concordia;Entre Ríos;23
+Diamante;Entre Ríos;22
+Federación;Entre Ríos;6
+Federal;Entre Ríos;2
+Feliciano;Entre Ríos;1
+Gualeguay;Entre Ríos;13
+Gualeguaychú;Entre Ríos;20
+Islas del Ibicuy;Entre Ríos;1
+La Paz;Entre Ríos;5
+Nogoyá;Entre Ríos;5
+Paraná;Entre Ríos;66
+San Salvador;Entre Ríos;1
+Tala;Entre Ríos;5
+Uruguay;Entre Ríos;19
+Victoria;Entre Ríos;5
+Villaguay;Entre Ríos;8
+Formosa;Formosa;2
+Patiño;Formosa;2
+Pilagás;Formosa;1
+Pilcomayo;Formosa;1
+Pirané;Formosa;1
+El Carmen;Jujuy;1
+Dr. Manuel Belgrano;Jujuy;5
+Humahuaca;Jujuy;1
+Tilcara;Jujuy;1
+Atreucó;La Pampa;4
+Capital;La Pampa;28
+Conhelo;La Pampa;3
+Chapaleufú;La Pampa;1
+Guatraché;La Pampa;9
+Hucal;La Pampa;3
+Loventué;La Pampa;1
+Maracó;La Pampa;15
+Quemú Quemú;La Pampa;4
+Rancul;La Pampa;2
+Realicó;La Pampa;8
+Toay;La Pampa;1
+Trenel;La Pampa;3
+Utracán;La Pampa;5
+Capital;La Rioja;6
+Chilecito;La Rioja;2
+Rosario Vera Peñaloza;La Rioja;1
+Capital;Mendoza;33
+General Alvear;Mendoza;11
+Godoy Cruz;Mendoza;17
+Guaymallén;Mendoza;37
+Junín;Mendoza;3
+La Paz;Mendoza;1
+Las Heras;Mendoza;4
+Luján de Cuyo;Mendoza;22
+Maipú;Mendoza;16
+Malargüe;Mendoza;2
+Rivadavia;Mendoza;7
+San Martín;Mendoza;13
+San Rafael;Mendoza;34
+Tunuyán;Mendoza;4
+Tupungato;Mendoza;1
+Apóstoles;Misiones;3
+Cainguás;Misiones;1
+Candelaria;Misiones;2
+Capital;Misiones;13
+Concepción;Misiones;3
+Eldorado;Misiones;7
+General Manuel Belgrano;Misiones;1
+Iguazú;Misiones;3
+Leandro N. Alem;Misiones;2
+Libertador General San Martín;Misiones;2
+Montecarlo;Misiones;1
+Oberá;Misiones;7
+San Ignacio;Misiones;4
+San Javier;Misiones;1
+San Pedro;Misiones;1
+Confluencia;Neuquén;31
+Chos Malal;Neuquén;2
+Los Lagos;Neuquén;3
+Zapala;Neuquén;1
+Adolfo Alsina;Río Negro;5
+Avellaneda;Río Negro;4
+Bariloche;Río Negro;8
+Conesa;Río Negro;1
+General Roca;Río Negro;19
+9 de Julio;Río Negro;1
+Pichi Mahuida;Río Negro;5
+Pilcaniyeu;Río Negro;2
+San Antonio;Río Negro;3
+25 de Mayo;Río Negro;3
+Capital;Salta;18
+Cerrillos;Salta;1
+Chicoana;Salta;1
+General José de San Martín;Salta;1
+La Caldera;Salta;1
+La Viña;Salta;1
+Orán;Salta;5
+Rosario de la Frontera;Salta;1
+Rosario de Lerma;Salta;1
+Capital;San Juan;16
+Rivadavia;San Juan;2
+Chacabuco;San Luis;2
+General Pedernera;San Luis;10
+Gobernador Dupuy;San Luis;1
+Junín;San Luis;4
+Juan Martín de Pueyrredón;San Luis;17
+Corpen Aike;Santa Cruz;2
+Deseado;Santa Cruz;2
+Güer Aike;Santa Cruz;4
+Lago Argentino;Santa Cruz;2
+Lago Buenos Aires;Santa Cruz;1
+Magallanes;Santa Cruz;1
+Río Chico;Santa Cruz;1
+Belgrano;Santa Fe;15
+Caseros;Santa Fe;34
+Castellanos;Santa Fe;43
+Constitución;Santa Fe;20
+Garay;Santa Fe;3
+General López;Santa Fe;53
+General Obligado;Santa Fe;6
+Iriondo;Santa Fe;30
+La Capital;Santa Fe;70
+Las Colonias;Santa Fe;51
+Rosario;Santa Fe;180
+San Cristóbal;Santa Fe;7
+San Javier;Santa Fe;2
+San Jerónimo;Santa Fe;35
+San Justo;Santa Fe;12
+San Lorenzo;Santa Fe;23
+San Martín;Santa Fe;29
+Vera;Santa Fe;7
+Aguirre;Santiago del Estero;1
+Banda;Santiago del Estero;2
+Capital;Santiago del Estero;2
+Figueroa;Santiago del Estero;1
+General Taboada;Santiago del Estero;2
+Moreno;Santiago del Estero;1
+Ojo de Agua;Santiago del Estero;1
+Río Grande;Tierra del Fuego;1
+Cruz Alta;Tucumán;1
+Chicligasta;Tucumán;1
+Famaillá;Tucumán;1
+Lules;Tucumán;1
+Capital;Tucumán;14
+Tafí del Valle;Tucumán;1
+Tafí Viejo;Tucumán;1
+Yerba Buena;Tucumán;2
