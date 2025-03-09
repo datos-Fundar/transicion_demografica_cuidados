@@ -1,7 +1,9 @@
-# La pirámide pierde su forma, ¿Estamos preparados?
+# El futuro de los cuidados: Una herramienta para la adaptación a la transición
+demográfica
 
 <!-- CAMBIAR "https://place-hold.it/1920x1080" POR EL LINK A LA IMAGEN CORRESPONDIENTE -->
-[![La pirámide pierde su forma, ¿estamos preparados?](https://place-hold.it/1920x1080)](https://fund.ar)
+[![El futuro de los cuidados: Una herramienta para la adaptación a la transición
+demográfica](https://place-hold.it/1920x1080)](https://fund.ar)
 
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%20NC%20SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 <!-- [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1234.svg)](https://zenodo.org/doi/10.5281/zenodo.11186044) -->
