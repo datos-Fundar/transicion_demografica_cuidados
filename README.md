@@ -1,5 +1,4 @@
-# El futuro de los cuidados: Una herramienta para la adaptación a la transición
-demográfica
+# El futuro de los cuidados: Una herramienta para la adaptación a la transición demográfica
 
 <!-- CAMBIAR "https://place-hold.it/1920x1080" POR EL LINK A LA IMAGEN CORRESPONDIENTE -->
 [![El futuro de los cuidados: Una herramienta para la adaptación a la transición
@@ -14,7 +13,7 @@ Esta investigación adoptó una estrategia cuantitativa, basada en el uso de fue
 #### Cita sugerida:
 
 ```r
-Puglia, M., Bendersky, A., de la Fuente, X., Santellán, C., Nadur, Y. (2025). La pirámide pierde su forma, ¿Estamos preparados? Una herramienta para mejorar la planificación en la provisión de cuidados en la última milla de la transición demográfica. Fundar.
+Puglia, M., Bendersky, A., de la Fuente, X., Santellán, C., Nadur, Y. (2025). El futuro de los cuidados: Una herramienta para la adaptación a la transición demográfica. Fundar.
 
 Bibtex:
 
