@@ -10,23 +10,6 @@ demográfica](https://place-hold.it/1920x1080)]([https://fund.ar](https://fund.a
 Este trabajo caracteriza la transición demográfica y el estado (presente y futuro) de la demanda y oferta de infraestructura y servicios de cuidado destinados a la primera infancia y a las personas mayores. 
 Esta investigación adoptó una estrategia cuantitativa, basada en el uso de fuentes de datos secundarias (bases de datos de organismos oficiales) para analizar la información sobre la demanda de cuidados y la oferta de infraestructura del cuidado a nivel nacional, provincial y departamental. 
 
-#### Cita sugerida:
-
-```r
-Puglia, M., Bendersky, A., de la Fuente, X., Santellán, C., Nadur, Y. (2025). El futuro de los cuidados: Una herramienta para la adaptación a la transición demográfica. Fundar.
-
-Bibtex:
-
-@report{XXXXXXXXXXXXXXX, 
-  author = {Puglia, M., Bendersky, A., de la Fuente, X., Santellán, C., Nadur, Y.}, 
-  title = {La pirámide pierde su forma, ¿Estamos preparados?}, 
-  year = {2025}, 
-  institution = {Fundar}, 
-  type = {Document} 
-}
-               
-```
-
 ## Índice de archivos
 
 - Libro de códigos, con la información acerca de la descripción de las bases de datos procesadas y de los campos que contienen.
