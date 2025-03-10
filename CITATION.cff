@@ -14,15 +14,9 @@ abstract: >-
     Además, se publican (en la capeta RAW, en formato crudo) las bases utilizadas para la confección de la base de Oferta para la Primera Infancia. Las bases restantes fueron creadas a partir de 
     información disponible en INDEC (se hace referencia en cada caso a la fuente).
     
-repository-code: >-
-"https://github.com/datos-Fundar/transicion_demografica_cuidados"
+repository-code: "https://github.com/datos-Fundar/transicion_demografica_cuidados"
 
 url: "https://fund.ar/publicacion/el-futuro-de-los-cuidados-una-herramienta-para-la-adaptacion-a-la-transicion-demografica/"
-
-identifiers:
-  - description: "Este repositorio forma parte del documento de trabajo "El futuro de los cuidados: Una herramienta para la adaptación a la transición demográfica", publicado por el equipo de Géneros de Fundar."
-  - type: doi
-  - identifiers: 
 
 authors:
   - given-names: "María de las Nieves"
