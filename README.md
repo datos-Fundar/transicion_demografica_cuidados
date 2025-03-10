@@ -35,6 +35,10 @@ Bibtex:
 - Base "base_proyecciones", que contiene las proyecciones poblacionales, a nivel departamental, estimadas a 2040, a partir del Censo Nacional de Poblaciones y Viviendas 2022 (INDEC).
 - Base "Base_Oferta_Infancias", que contiene la información acerca de los establecimientos que brindan cuidado a las personas en edad de Primera Infancia (0-4 años), desagregada a nivel provincial y departamental.
 - Base "Base_Oferta_PM", que contiene la información acerca de los establecimientos que brindan cuidado a las personas mayores (60 años y más) con dependencia básica (establecimientos de institucionalización total o residencias de larga estadía), desagregada a nivel provincial y departamental.
+- Base cruda (RAW) de establecimientos destinados a la primera infancia del Mapa Federal del Cuidado (Ex Ministerio de las Mujeres, Géneros y Diversidad de la Nación Argentina).
+- Base cruda (RAW) del Padrón Oficial de Establecimientos Educativos (dependiente de la Dirección de Información y Estadística Educativa (DINIECE), Secretaría de Educación, Ministerio de Capital Humano de la Nación Argentina).
+- Base cruda (RAW) Base de Asentamientos Humanos de la República Argentina (BAHRA), (Programa Nacional Mapa Educativo, ex Ministerio de Educación de la Nación, Instituto Nacional de Estadística y Censos (INDEC) e Instituto Geográfico Nacional (IGN).
+
 
 
 
