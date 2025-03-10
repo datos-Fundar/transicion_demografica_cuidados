@@ -2,21 +2,46 @@ cff-version: 1.2.0
 message: "Si usás este repositorio, por favor citalo usando estos datos."
 license: CC-BY-NC-SA-4.0
 type: dataset
-date-released: "YYYY-MM-DD"
-title: "La pirámide pierde su forma, ¿Estamos preparados?"
-abstract: >-
-  Por favor cambiar este texto. Acá va una descripción
-  del artículo y/o de los datos que contiene el repo.
+date-released: "2025-03-11"
 
-repository-code: "https://github.com/datos-Fundar/transicion_demografica_cuidados"
-url: "https://fund.ar/dolorsitamet"
+title: "El futuro de los cuidados: Una herramienta para la adaptación a la transición demográfica"
+
+abstract: >-
+    Este repositorio forma parte del documento de trabajo "El futuro de los cuidados: Una herramienta para la adaptación a la transición demográfica", publicado por el equipo de Géneros de Fundar. 
+    Aquí se disponibilizan algunas bases de datos utilizadas para la elaboración de este estudio, como las bases de caracterización de la población demandante (primera infancia -0-4 años de edad- 
+    y personas mayores -60 años y más-) y las bases de caracterización de la oferta existente en materia de infraestructura de cuidados para ambos grupos etarios. En el Libro de Códigos se detallan 
+    las características de dicahs bases, así como los campos que las componen. 
+    Además, se publican (en la capeta RAW, en formato crudo) las bases utilizadas para la confección de la base de Oferta para la Primera Infancia. Las bases restantes fueron creadas a partir de 
+    información disponible en INDEC (se hace referencia en cada caso a la fuente).
+    
+repository-code: >-
+"https://github.com/datos-Fundar/transicion_demografica_cuidados"
+
+url: "https://fund.ar/publicacion/el-futuro-de-los-cuidados-una-herramienta-para-la-adaptacion-a-la-transicion-demografica/"
 
 identifiers:
-  - description: "Breve descripción del proyecto"
-  
+  - description: "Este repositorio forma parte del documento de trabajo "El futuro de los cuidados: Una herramienta para la adaptación a la transición demográfica", publicado por el equipo de Géneros de Fundar."
+  - type: doi
+  - identifiers: 
+
 authors:
+  - given-names: "María de las Nieves"
+    family-names: "Puglia"
+    affiliation: "Fundar"
+    email: mnpuglia@fund.ar
+  - given-names: "Agustina"
+    family-names: "Bendersky"
+    affiliation: "Fundar"
+    email: abendersky@fund.ar
   - given-names: "Ximena"
     family-names: "de la Fuente"
     affiliation: "Fundar"
     email: xdelafuente@fund.ar
+  - given-names: "Celina"
+    family-names: "Santellán"
+    affiliation: "Fundar"
+  - given-names: "Yamila"
+    family-names: "Nadur"
+    affiliation: "Fundar"
+    email: ynadur@fund.ar   
     
