@@ -13,11 +13,11 @@ Esta investigación adoptó una estrategia cuantitativa, basada en el uso de fue
 ## Índice de archivos
 
 - Libro de códigos, con la información acerca de la descripción de las bases de datos procesadas y de los campos que contienen.
-- Base "Demanda_Nacional", que contiene la información acerca de las poblaciones demandantes de cuidados de primera infancia y de personas mayores a nivel nacional, provincial y departamental.
-- Base "Demanda_Provincial", que contiene la información acerca de las poblaciones demandantes de cuidados de primera infancia y de personas mayores agregada de forma provincial.
-- Base "base_proyecciones", que contiene las proyecciones poblacionales, a nivel departamental, estimadas a 2040, a partir del Censo Nacional de Poblaciones y Viviendas 2022 (INDEC).
-- Base "Base_Oferta_Infancias", que contiene la información acerca de los establecimientos que brindan cuidado a las personas en edad de Primera Infancia (0-4 años), desagregada a nivel provincial y departamental.
-- Base "Base_Oferta_PM", que contiene la información acerca de los establecimientos que brindan cuidado a las personas mayores (60 años y más) con dependencia básica (establecimientos de institucionalización total o residencias de larga estadía), desagregada a nivel provincial y departamental.
+- Base ["Demanda_Nacional"](Data/Demanda_Nacional.csv), que contiene la información acerca de las poblaciones demandantes de cuidados de primera infancia y de personas mayores a nivel nacional, provincial y departamental.
+- Base ["Demanda_Provincial"](Data/Demanda_Provincial.csv), que contiene la información acerca de las poblaciones demandantes de cuidados de primera infancia y de personas mayores agregada de forma provincial.
+- Base ["base_proyecciones"](Data/base_proyecciones.csv), que contiene las proyecciones poblacionales, a nivel departamental, estimadas a 2040, a partir del Censo Nacional de Poblaciones y Viviendas 2022 (INDEC).
+- Base ["Base_Oferta_Infancias"](Data/Base_Oferta_Infancias.csv), que contiene la información acerca de los establecimientos que brindan cuidado a las personas en edad de Primera Infancia (0-4 años), desagregada a nivel provincial y departamental.
+- Base ["Base_Oferta_PM"](Data/Base_Oferta_PM.csv), que contiene la información acerca de los establecimientos que brindan cuidado a las personas mayores (60 años y más) con dependencia básica (establecimientos de institucionalización total o residencias de larga estadía), desagregada a nivel provincial y departamental.
 - Base cruda (RAW) de establecimientos destinados a la primera infancia del Mapa Federal del Cuidado (Ex Ministerio de las Mujeres, Géneros y Diversidad de la Nación Argentina).
 - Base cruda (RAW) del Padrón Oficial de Establecimientos Educativos (dependiente de la Dirección de Información y Estadística Educativa (DINIECE), Secretaría de Educación, Ministerio de Capital Humano de la Nación Argentina).
 - Base cruda (RAW) Base de Asentamientos Humanos de la República Argentina (BAHRA), (Programa Nacional Mapa Educativo, ex Ministerio de Educación de la Nación, Instituto Nacional de Estadística y Censos (INDEC) e Instituto Geográfico Nacional (IGN).
