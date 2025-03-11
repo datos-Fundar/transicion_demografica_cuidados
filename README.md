@@ -5,7 +5,7 @@
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%20NC%20SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![DOI](https://zenodo.org/badge/888566125.svg)](https://doi.org/10.5281/zenodo.15002873)
 
-Este trabajo caracteriza la transición demográfica y el estado (presente y futuro) de la demanda y oferta de infraestructura y servicios de cuidado destinados a la primera infancia y a las personas mayores. 
+[Este trabajo](https://fund.ar/publicacion/el-futuro-de-los-cuidados-una-herramienta-para-la-adaptacion-a-la-transicion-demografica/) caracteriza la transición demográfica y el estado (presente y futuro) de la demanda y oferta de infraestructura y servicios de cuidado destinados a la primera infancia y a las personas mayores. 
 Esta investigación adoptó una estrategia cuantitativa, basada en el uso de fuentes de datos secundarias (bases de datos de organismos oficiales) para analizar la información sobre la demanda de cuidados y la oferta de infraestructura del cuidado a nivel nacional, provincial y departamental. 
 
 ## Índice de archivos
@@ -22,4 +22,37 @@ Esta investigación adoptó una estrategia cuantitativa, basada en el uso de fue
 
 
 
+
+---
+## Cita sugerida
+
+Puglia, M. de las N.; Bendersky, A.; De la Fuente, X.; Santellán, C. y Nadur, Y. (2025). [El futuro de los cuidados. Una herramienta para la adaptación a la transición demográfica](https://fund.ar/publicacion/el-futuro-de-los-cuidados-una-herramienta-para-la-adaptacion-a-la-transicion-demografica/). Fundar.
+
+
+
+```bibtex
+@misc{Puglia_El_futuro_de_2025,
+author = {Puglia, María de las Nieves and Bendersky, Agustina and de la Fuente, Ximena and Santellán, Celina and Nadur, Yamila},
+month = mar,
+title = {{El futuro de los cuidados: Una herramienta para la adaptación a la transición demográfica}},
+url = {https://github.com/datos-Fundar/transicion_demografica_cuidados},
+year = {2025}
+}
+```
+
+
+
+---
+<div> </div>
+<div> </div>
+<div>
+   
+  <a href="https://fund.ar">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/datos-Fundar/fundartools/assets/86327859/6ef27bf9-141f-4537-9d78-e16b80196959">
+    <source media="(prefers-color-scheme: light)" srcset="https://github.com/datos-Fundar/fundartools/assets/86327859/aa8e7c72-4fad-403a-a8b9-739724b4c533">
+    <img src="fund.ar"></img>
+  </picture>
+</a>
+</div>
 
